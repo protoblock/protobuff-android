@@ -20,10 +20,77 @@
 # FIXME pkgconf is not working oob
 #
 
+
+
+printHelp(){
+ 	
+cat << _EOF_
+
+#______________________________________________________________ #
+#    ____                                                       #
+#    /    )                          /     /               /    #
+#---/____/---)__----__--_/_----__---/__---/----__----__---/-__- #
+#  /        /   ) /   ) /    /   ) /   ) /   /   ) /   ' /(     #
+#_/________/_____(___/_(_ __(___/_(___/_/___(___/_(___ _/___\__ #
+#								#
+#______________________________________________________________ #
+#								#                                                              
+Usage 
+$0 [option] 
+ 
+ Options
+		[ --debug, -d , -v --verbose ]
+			Print out in debug mode
+ 
+		[ --help, -h, h , ? ]
+			Print this help
+ 
+_EOF_
+exit 1;
+}
+
+
+
+if [ $# -lt 1 ]; then
+	printHelp;
+fi
+
+DEBUG=0;
+
+while [[ $# > 1 ]]
+do
+key="$1"
+case $key in
+    -d|--debug|d|v|--verbose)
+    DEBUG=1
+    shift # past argument
+    ;;
+    -h|--help|h|?)
+    printHelp;
+    shift 
+    ;;
+    --default)
+    DEFAULT=YES
+    ;;
+    *)
+    printHelp;
+    shift;
+    ;;
+esac
+shift
+done
+
+
+# FIXME debug
+if [ $DEBUG == 1 ];
+ then
+ 		set -x
+fi
+
 PREFIX=$HOME/bin/protobuf/android
 if [ -d $PREFIX ];
 	then 
-	rm -rf ${PREFIX}
+	rm -rf $HOME/bin/protobuf/
 	mkdir -p ${PREFIX}/lib
 	mkdir -p ${PREFIX}/include
 else 
@@ -40,7 +107,12 @@ if [ -d $HOME/Desktop/ndk/android-ndk-r11c ];
 		cd $HOME/Desktop/ndk/
 		wget http://dl.google.com/android/repository/android-ndk-r11c-darwin-x86_64.zip
 		bzip2 -d android-ndk-r11c-darwin-x86.tar.bz2
-		tar -xf android-ndk-r11c-darwin-x86.tar
+		if [ $DEBUG == 1 ];
+		then
+			tar -xvf android-ndk-r11c-darwin-x86.tar
+		else
+			tar -xf android-ndk-r11c-darwin-x86.tar
+		fi
 		## clean up
 		## rm android-ndk-r11c-darwin-x86.tar
 		## rm android-ndk-r11c-darwin-x86.tar.bz2
@@ -94,6 +166,7 @@ cp /tmp/protobuf-2.6.1/src/.libs/libprotobuf.a $PREFIX/lib/libprotobuf.a
 cp /tmp/protobuf-2.6.1/src/.libs/libprotobuf-lite.a $PREFIX/lib/libprotobuf-lite.a
 cp /tmp/protobuf-2.6.1/src/.libs/libprotoc.a $PREFIX/lib/libprotoc.a
 
-mkdir -p $HOME/bin/protobuf/include/google/protobuf/
-cp -r /tmp/protobuf-2.6.1/src/google/protobuf/ $PREFIX/include/google/protobuf/
+
+mkdir -p $HOME/bin/protobuf/android/include/google/protobuf/
+cp -r /tmp/protobuf-2.6.1/src/google/protobuf $PREFIX/include/google/protobuf
 
