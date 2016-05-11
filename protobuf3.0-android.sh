@@ -133,17 +133,19 @@ then
 	rm -rf /tmp/v3.0.0-beta-3-pre-1.tar.gz
 fi
 
+rm -rf /tmp/protobuf-3.0.0-beta-3-pre-1/
+
 wget https://github.com/google/protobuf/archive/v3.0.0-beta-3-pre-1.tar.gz
 echo "Extracting protobuf"
 tar xf /tmp/v3.0.0-beta-3-pre-1.tar.gz
 
 cd /tmp/protobuf-3.0.0-beta-3-pre-1
 
-mkdir build
+mkdir m_build
 
 ./autogen.sh 
 
-./configure --prefix=/tmp/protobuf-3.0.0-beta-3-pre-1/build \
+./configure --prefix=/tmp/protobuf-3.0.0-beta-3-pre-1/m_build \
 --host=arm-linux-androideabi \
 --with-sysroot=$SYSROOT \
 --enable-cross-compile \
@@ -159,13 +161,15 @@ make install
  
 # # 5. Inspect the library architecture specific information
 arm-linux-androideabi-readelf -A /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotobuf-lite.a
+arm-linux-androideabi-readelf -A /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotobuf.a
+arm-linux-androideabi-readelf -A /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotoc.a
 
-# cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotobuf.a $QTLIBS/libprotobuf.a
-# cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotobuf-lite.a $QTLIBS/libprotobuf-lite.a
-# cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotoc.a $QTLIBS/libprotoc.a
+cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotobuf.a $QTLIBS/libprotobuf.a
+cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotobuf-lite.a $QTLIBS/libprotobuf-lite.a
+cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotoc.a $QTLIBS/libprotoc.a
 
 
-# mkdir -p $QTINCLUDES/google/protobuf/
-# cp -r /tmp/protobuf-$2/src/google/protobuf $QTINCLUDES/google/
+mkdir -p $QTINCLUDES/google/protobuf/
+cp -r /tmp/protobuf-$2/src/google/protobuf $QTINCLUDES/google/
 
 
