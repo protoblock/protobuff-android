@@ -164,12 +164,12 @@ arm-linux-androideabi-readelf -A /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libp
 arm-linux-androideabi-readelf -A /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotobuf.a
 arm-linux-androideabi-readelf -A /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotoc.a
 
-cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotobuf.a $QTLIBS/libprotobuf.a
-cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotobuf-lite.a $QTLIBS/libprotobuf-lite.a
-cp /tmp/v3.0.0-beta-3-pre-1/src/.libs/libprotoc.a $QTLIBS/libprotoc.a
+cp /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotobuf.a $QTLIBS/libprotobuf.a
+cp /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotobuf-lite.a $QTLIBS/libprotobuf-lite.a
+cp /tmp/protobuf-3.0.0-beta-3-pre-1/src/.libs/libprotoc.a $QTLIBS/libprotoc.a
 
 
 mkdir -p $QTINCLUDES/google/protobuf/
-cp -r /tmp/protobuf-$2/src/google/protobuf $QTINCLUDES/google/
+cp -r /tmp/protobuf-3.0.0-beta-3-pre-1/src/google/protobuf $QTINCLUDES/google/
 
 
