@@ -34,7 +34,7 @@ cat << _EOF_
 #______________________________________________________________ #
 #								#                                                              
 Usage 
-$0 [option] 
+$0 [option] version
  
  Options
 		[ --debug, -d , -v --verbose ]
@@ -43,40 +43,40 @@ $0 [option]
 		[ --help, -h, h , ? ]
 			Print this help
  
+Eample: 
+	$0 -r 2.5.0
 _EOF_
 exit 1;
 }
 
 
 
-if [ $# -lt 1 ]; then
+if [ $# -lt 2 ]; 
+then
+	printHelp;
+fi
+
+
+if [ -z "$2" ]; 
+then
 	printHelp;
 fi
 
 DEBUG=0;
-
-while [[ $# > 1 ]]
-do
-key="$1"
-case $key in
+case "$1" in
     -d|--debug|d|v|--verbose)
-    DEBUG=1
-    shift # past argument
+    	DEBUG=1
     ;;
-    -h|--help|h|?)
-    printHelp;
-    shift 
-    ;;
-    --default)
-    DEFAULT=YES
+    -r|--release)
+		DEBUG=0
+	;;
+        -h|--help|h|?)
+    	printHelp;
     ;;
     *)
-    printHelp;
-    shift;
-    ;;
+		printHelp
+	;;
 esac
-shift
-done
 
 
 # FIXME debug
@@ -130,41 +130,43 @@ export CXXSTL=$NDK_HOME/sources/cxx-stl/gnu-libstdc++/4.9/
 ##########################################
 
 cd /tmp
-wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
- 
-if [ -d /tmp/protobuf-2.6.1.tar.gz ];
+rm /tmp/protobuf-$2.tar.*
+if [ -d /tmp/protobuf-$2.tar.gz ];
 then
-	rm -rf /tmp/protobuf-2.6.1.tar.gz
+	rm -rf /tmp/protobuf-$2.tar.gz
 fi
 
+wget https://github.com/google/protobuf/releases/download/v$2/protobuf-$2.tar.gz
 echo "Extracting protobuf"
-tar xf /tmp/protobuf-2.6.1.tar.gz
+tar xf /tmp/protobuf-$2.tar.gz
 
-cd /tmp/protobuf-2.6.1/
+cd /tmp/protobuf-$2/
 
 mkdir build
 
-./configure --prefix=/tmp/protobuf-2.6.1/build \
+./configure --prefix=/tmp/protobuf-$2/build \
 --host=arm-linux-androideabi \
 --with-sysroot=$SYSROOT \
---disable-shared \
 --enable-cross-compile \
---with-protoc=/usr/local/bin/protoc \
+--with-protoc=protoc \
+--disable-shared \
 CFLAGS="-march=armv7-a" \
 CXXFLAGS="-march=armv7-a -I$CXXSTL/include -I$CXXSTL/libs/armeabi-v7a/include"
  
+
 # 4. Build
 make all
+make check
 make install
  
 # 5. Inspect the library architecture specific information
-arm-linux-androideabi-readelf -A /tmp/protobuf-2.6.1/src/.libs/libprotobuf-lite.a
+arm-linux-androideabi-readelf -A /tmp/protobuf-$2/src/.libs/libprotobuf-lite.a
 
-cp /tmp/protobuf-2.6.1/src/.libs/libprotobuf.a $PREFIX/lib/libprotobuf.a
-cp /tmp/protobuf-2.6.1/src/.libs/libprotobuf-lite.a $PREFIX/lib/libprotobuf-lite.a
-cp /tmp/protobuf-2.6.1/src/.libs/libprotoc.a $PREFIX/lib/libprotoc.a
+cp /tmp/protobuf-$2/src/.libs/libprotobuf.a $PREFIX/lib/libprotobuf.a
+cp /tmp/protobuf-$2/src/.libs/libprotobuf-lite.a $PREFIX/lib/libprotobuf-lite.a
+cp /tmp/protobuf-$2/src/.libs/libprotoc.a $PREFIX/lib/libprotoc.a
 
 
 mkdir -p $HOME/bin/protobuf/android/include/google/protobuf/
-cp -r /tmp/protobuf-2.6.1/src/google/protobuf $PREFIX/include/google/protobuf
+cp -r /tmp/protobuf-$2/src/google/protobuf $PREFIX/include/google/
 
