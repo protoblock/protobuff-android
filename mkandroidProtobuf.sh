@@ -38,8 +38,11 @@ $0 [option] version
  
  Options
 		[ --debug, -d , -v --verbose ]
-			Print out in debug mode
- 
+			Print std out in debug mode
+ 		
+ 		[ --release, -r ]
+			Print std in release mode
+
 		[ --help, -h, h , ? ]
 			Print this help
  
