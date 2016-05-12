@@ -1,4 +1,4 @@
-PROTO_PREFIX=/tmp/protobuf-2.5.0
+PROTO_PREFIX=/tmp/protobuf-SEDME
 include $(CLEAR_VARS)
 # C++ full library
 # =======================================================
@@ -17,27 +17,27 @@ LOCAL_C_INCLUDES := $(PROTO_PREFIX) \
 					$(JNI_H_INCLUDE)
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := \
-    $(CC_LITE_SRC_FILES)                                             \
-    $(PROTO_PREFIX)/src/google/protobuf/stubs/strutil.cc                             \
-    $(PROTO_PREFIX)/src/google/protobuf/stubs/substitute.cc                          \
-    $(PROTO_PREFIX)/src/google/protobuf/stubs/structurally_valid.cc                  \
-    $(PROTO_PREFIX)/src/google/protobuf/descriptor.cc                                \
-    $(PROTO_PREFIX)/src/google/protobuf/descriptor.pb.cc                             \
-    $(PROTO_PREFIX)/src/google/protobuf/descriptor_database.cc                       \
-    $(PROTO_PREFIX)/src/google/protobuf/dynamic_message.cc                           \
-    $(PROTO_PREFIX)/src/google/protobuf/extension_set_heavy.cc                       \
-    $(PROTO_PREFIX)/src/google/protobuf/generated_message_reflection.cc              \
-    $(PROTO_PREFIX)/src/google/protobuf/message.cc                                   \
-    $(PROTO_PREFIX)/src/google/protobuf/reflection_ops.cc                            \
-    $(PROTO_PREFIX)/src/google/protobuf/service.cc                                   \
-    $(PROTO_PREFIX)/src/google/protobuf/text_format.cc                               \
-    $(PROTO_PREFIX)/src/google/protobuf/unknown_field_set.cc                         \
-    $(PROTO_PREFIX)/src/google/protobuf/wire_format.cc                               \
-    $(PROTO_PREFIX)/src/google/protobuf/io/gzip_stream.cc                            \
-    $(PROTO_PREFIX)/src/google/protobuf/io/printer.cc                                \
-    $(PROTO_PREFIX)/src/google/protobuf/io/tokenizer.cc                              \
-    $(PROTO_PREFIX)/src/google/protobuf/io/zero_copy_stream_impl.cc                  \
-    $(PROTO_PREFIX)/src/google/protobuf/compiler/importer.cc                         \
+    $(CC_LITE_SRC_FILES) \
+    $(PROTO_PREFIX)/src/google/protobuf/stubs/strutil.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/stubs/substitute.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/stubs/structurally_valid.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/descriptor.cc  \
+    $(PROTO_PREFIX)/src/google/protobuf/descriptor.pb.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/descriptor_database.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/dynamic_message.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/extension_set_heavy.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/generated_message_reflection.cc  \
+    $(PROTO_PREFIX)/src/google/protobuf/message.cc  \
+    $(PROTO_PREFIX)/src/google/protobuf/reflection_ops.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/service.cc  \
+    $(PROTO_PREFIX)/src/google/protobuf/text_format.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/unknown_field_set.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/wire_format.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/io/gzip_stream.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/io/printer.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/io/tokenizer.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/io/zero_copy_stream_impl.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/compiler/importer.cc \
     $(PROTO_PREFIX)/src/google/protobuf/compiler/parser.cc
 
 LOCAL_SHARED_LIBRARIES := \
@@ -66,16 +66,16 @@ LOCAL_CFLAGS := -DGOOGLE_PROTOBUF_NO_RTTI
 
 
 CC_LITE_SRC_FILES := \
-    $(PROTO_PREFIX)/src/google/protobuf/stubs/common.cc                              \
-    $(PROTO_PREFIX)/src/google/protobuf/stubs/once.cc                                \
-	$(PROTO_PREFIX)/src/google/protobuf/stubs/hash.cc                                \
-    $(PROTO_PREFIX)/src/google/protobuf/extension_set.cc                             \
-    $(PROTO_PREFIX)/src/google/protobuf/generated_message_util.cc                    \
-    $(PROTO_PREFIX)/src/google/protobuf/message_lite.cc                              \
-    $(PROTO_PREFIX)/src/google/protobuf/repeated_field.cc                            \
-    $(PROTO_PREFIX)/src/google/protobuf/wire_format_lite.cc                          \
-    $(PROTO_PREFIX)/src/google/protobuf/io/coded_stream.cc                           \
-    $(PROTO_PREFIX)/src/google/protobuf/io/zero_copy_stream.cc                       \
+    $(PROTO_PREFIX)/src/google/protobuf/stubs/common.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/stubs/once.cc \
+	$(PROTO_PREFIX)/src/google/protobuf/stubs/hash.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/extension_set.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/generated_message_util.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/message_lite.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/repeated_field.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/wire_format_lite.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/io/coded_stream.cc \
+    $(PROTO_PREFIX)/src/google/protobuf/io/zero_copy_stream.cc \
     $(PROTO_PREFIX)/src/google/protobuf/io/zero_copy_stream_impl_lite.cc
 
 COMPILER_SRC_FILES :=  \
@@ -151,7 +151,5 @@ COMPILER_SRC_FILES :=  \
     $(PROTO_PREFIX)/src/google/protobuf/stubs/structurally_valid.cc \
     $(PROTO_PREFIX)/src/google/protobuf/stubs/strutil.cc \
     $(PROTO_PREFIX)/src/google/protobuf/stubs/substitute.cc
-
-
 
 include $(BUILD_SHARED_LIBRARY)
