@@ -11,14 +11,6 @@
 #
 # contact@protoblock.com
 #
-# FIXME make options to pass in for the following
-# + ndk root location
-# + android cross build usr path
-# + Version of protobuf to build
-# 
-#
-# FIXME pkgconf is not working oob
-#
 
 
 
@@ -36,13 +28,13 @@ cat << _EOF_
 
 ```````````````````````````````````````````````````````````
 
-NOTE YOU CAN NOT USE THIS TO VUILD PROTOBUF > 2.9.9
+NOTE YOU CAN ONLY USE THIS TO BUILD PROTOBUF > 2.6.1
 
 ```````````````````````````````````````````````````````````
 
 
 Usage 
-$0 [option] version
+$0 [option]
  
  Options
 		[ --debug, -d , -v --verbose ]
@@ -56,23 +48,19 @@ $0 [option] version
 
  
 Eample: 
-	$0 -r 2.5.0
+	$0 -r
 _EOF_
 exit 1;
 }
 
 
 
-if [ $# -lt 2 ]; 
+if [ $# -lt 1 ]; 
 then
 	printHelp;
 fi
 
 
-if [ -z "$2" ]; 
-then
-	printHelp;
-fi
 
 DEBUG=0;
 case "$1" in
@@ -97,36 +85,7 @@ if [ $DEBUG == 1 ];
  		set -x
 fi
 
-PREFIX=$HOME/bin/protobuf/android
-if [ -d $PREFIX ];
-	then 
-	rm -rf $HOME/bin/protobuf/
-	mkdir -p ${PREFIX}/lib
-	mkdir -p ${PREFIX}/include
-else 
-	mkdir -p ${PREFIX}/lib
-	mkdir -p ${PREFIX}/include/leveldb/
-fi 
 
-if [ -d $HOME/Desktop/ndk/android-ndk-r11c ];
-	then
-		echo "Already have the right version of ndk";
-	else
-		echo "Downloading the correct NDK toolkit";
-		mkdir -p $HOME/Desktop/ndk/
-		cd $HOME/Desktop/ndk/
-		wget http://dl.google.com/android/repository/android-ndk-r11c-darwin-x86_64.zip
-		bzip2 -d android-ndk-r11c-darwin-x86.tar.bz2
-		if [ $DEBUG == 1 ];
-		then
-			tar -xvf android-ndk-r11c-darwin-x86.tar
-		else
-			tar -xf android-ndk-r11c-darwin-x86.tar
-		fi
-		## clean up
-		## rm android-ndk-r11c-darwin-x86.tar
-		## rm android-ndk-r11c-darwin-x86.tar.bz2
-	fi
 
 
 NDK_HOME=$HOME/Desktop/ndk/android-ndk-r11c
@@ -141,38 +100,18 @@ export CXXSTL=$NDK_HOME/sources/cxx-stl/gnu-libstdc++/4.9/
 # Download Protobuf
 ##########################################
 
+
 cd /tmp
-rm /tmp/protobuf-$2.tar.*
-if [ -d /tmp/protobuf-$2.tar.gz ];
-then
-	rm -rf /tmp/protobuf-$2.tar.gz
+
+if [ -d /tmp/protobuf-android ];
+	then 
+	rm -rf /tmp/protobuf-android
 fi
 
-wget https://github.com/google/protobuf/releases/download/v$2/protobuf-$2.tar.gz
-echo "Extracting protobuf"
-tar xf /tmp/protobuf-$2.tar.gz
-
-cd /tmp/protobuf-$2/
-mkdir -p /tmp/protobuf-$2/jni
-cp $HOME/bin/protobuff-android/Android.mk /tmp/protobuf-$2/jni/
-cp $HOME/bin/protobuff-android/Application.mk /tmp/protobuf-$2/jni/
-
-
-sed -i '' "s/protobuf-SEDME/protobuf-$2/g" /tmp/protobuf-$2/jni/Android.mk
-
-mkdir m_build
-./configure --prefix=/tmp/protobuf-$2/m_build \
---host=arm-linux-androideabi \
---with-sysroot=$SYSROOT \
---enable-cross-compile \
---with-protoc=protoc \
---disable-shared \
-CFLAGS="-march=armv7-a" \
-CXXFLAGS="-march=armv7-a -I$CXXSTL/include -I$CXXSTL/libs/armeabi-v7a/include"
- 
-
+git clone https://github.com/protoblock/protobuf-android.git
+cd /tmp/protobuf-android
 $NDK_HOME/ndk-build
-make check
+
  
 # 5. Inspect the library architecture specific information
 # arm-linux-androideabi-readelf -A /tmp/protobuf-$2/src/.libs/libprotobuf-lite.a
@@ -185,3 +124,9 @@ make check
 # mkdir -p $HOME/bin/protobuf/android/include/google/protobuf/
 # cp -r /tmp/protobuf-$2/src/google/protobuf $PREFIX/include/google/
 
+
+
+
+
+
+https://github.com/protoblock/protobuf-android.git

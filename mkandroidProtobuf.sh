@@ -120,13 +120,13 @@ if [ -d $HOME/Desktop/ndk/android-ndk-r11c ];
 	fi
 
 
-NDK_HOME=$HOME/Desktop/ndk/android-ndk-r11c
+NDK_HOME=$HOME/Desktop/ndk/crystax-ndk-10.3.1
 export ANDROID_NDK_ROOT=$NDK_HOME
 export PATH=$NDK_HOME/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/:$PATH
-export SYSROOT=$NDK_HOME/platforms/android-24/arch-arm/
+export SYSROOT=$NDK_HOME/platforms/android-21/arch-arm/
 export CC="arm-linux-androideabi-gcc --sysroot $SYSROOT"
 export CXX="arm-linux-androideabi-g++ --sysroot $SYSROOT"
-export CXXSTL=$NDK_HOME/sources/cxx-stl/gnu-libstdc++/4.9/
+export CXXSTL=$NDK_HOME/sources/cxx-stl/gnu-libstdc++/4.9
  
 ##########################################
 # Download Protobuf
@@ -151,11 +151,11 @@ mkdir build
 --host=arm-linux-androideabi \
 --with-sysroot=$SYSROOT \
 --enable-cross-compile \
---with-protoc=protoc \
 --disable-shared \
 CFLAGS="-march=armv7-a" \
 CXXFLAGS="-march=armv7-a -I$CXXSTL/include -I$CXXSTL/libs/armeabi-v7a/include"
- 
+
+#--with-protoc=protoc \ 
 
 # 4. Build
 make all
