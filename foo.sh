@@ -21,167 +21,55 @@
 #
 
 
+INSTALLPATH=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android-2.5.0
 
-printHelp(){
-cat << _EOF_
-#______________________________________________________________ #
-#    ____                                                       #
-#    /    )                          /     /               /    #
-#---/____/---)__----__--_/_----__---/__---/----__----__---/-__- #
-#  /        /   ) /   ) /    /   ) /   ) /   /   ) /   ' /(     #
-#_/________/_____(___/_(_ __(___/_(___/_/___(___/_(___ _/___\__ #
-#								#
-#______________________________________________________________ #
-#								#                                                              
+BUILDDIR=$(pwd)/build-protobuf-android-2.5.0
+PREFIX=`pwd`/protobuf/android-2.5.0
+rm -rf ${PREFIX} ${BUILDDIR}
 
-```````````````````````````````````````````````````````````
+mkdir -p ${PREFIX}
+mkdir -p ${BUILDDIR}
 
-NOTE YOU CAN NOT USE THIS TO VUILD PROTOBUF > 2.9.9
-
-```````````````````````````````````````````````````````````
-
-
-Usage 
-$0 [option] version
+export NDK=/Users/satoshi/Desktop/ndk/android-ndk-r10e
  
- Options
-		[ --debug, -d , -v --verbose ]
-			Print std out in debug mode
- 		
- 		[ --release, -r ]
-			Print std in release mode
-
-		[ --help, -h, h , ? ]
-			Print this help
-
- 
-Eample: 
-	$0 -r 2.5.0
-_EOF_
-exit 1;
-}
-
-
-
-if [ $# -lt 2 ]; 
-then
-	printHelp;
-fi
-
-
-if [ -z "$2" ]; 
-then
-	printHelp;
-fi
-
-DEBUG=0;
-case "$1" in
-    -d|--debug|d|v|--verbose)
-    	DEBUG=1
-    ;;
-    -r|--release)
-		DEBUG=0
-	;;
-        -h|--help|h|?)
-    	printHelp;
-    ;;
-    *)
-		printHelp
-	;;
-esac
-
-
-# FIXME debug
-if [ $DEBUG == 1 ];
- then
- 		set -x
-fi
-
-PREFIX=$HOME/bin/protobuf/android
-if [ -d $PREFIX ];
-	then 
-	rm -rf $HOME/bin/protobuf/
-	mkdir -p ${PREFIX}/lib
-	mkdir -p ${PREFIX}/include
-else 
-	mkdir -p ${PREFIX}/lib
-	mkdir -p ${PREFIX}/include/leveldb/
-fi 
-
-if [ -d $HOME/Desktop/ndk/android-ndk-r11c ];
-	then
-		echo "Already have the right version of ndk";
-	else
-		echo "Downloading the correct NDK toolkit";
-		mkdir -p $HOME/Desktop/ndk/
-		cd $HOME/Desktop/ndk/
-		wget http://dl.google.com/android/repository/android-ndk-r11c-darwin-x86_64.zip
-		bzip2 -d android-ndk-r11c-darwin-x86.tar.bz2
-		if [ $DEBUG == 1 ];
-		then
-			tar -xvf android-ndk-r11c-darwin-x86.tar
-		else
-			tar -xf android-ndk-r11c-darwin-x86.tar
-		fi
-		## clean up
-		## rm android-ndk-r11c-darwin-x86.tar
-		## rm android-ndk-r11c-darwin-x86.tar.bz2
-	fi
-
-
-NDK_HOME=$HOME/Desktop/ndk/android-ndk-r11c
-export ANDROID_NDK_ROOT=$NDK_HOME
-export PATH=$NDK_HOME/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/:$PATH
-export SYSROOT=$NDK_HOME/platforms/android-24/arch-arm/
+# 1. Use the tools from the Standalone Toolchain
+export PATH=/Users/satoshi/Desktop/ndk/android-ndk-r10e/build/toolchain/bin:$PATH
+export SYSROOT=/Users/satoshi/Desktop/ndk/android-ndk-r10e/build/toolchain/sysroot
 export CC="arm-linux-androideabi-gcc --sysroot $SYSROOT"
 export CXX="arm-linux-androideabi-g++ --sysroot $SYSROOT"
-export CXXSTL=$NDK_HOME/sources/cxx-stl/gnu-libstdc++/4.9/
+export CXXSTL=$NDK/sources/cxx-stl/gnu-libstdc++/4.9
  
 ##########################################
-# Download Protobuf
+# Fetch Protobuf 2.5.0 from source.
 ##########################################
 
-cd /tmp
-rm /tmp/protobuf-$2.tar.*
-if [ -d /tmp/protobuf-$2.tar.gz ];
-then
-	rm -rf /tmp/protobuf-$2.tar.gz
-fi
-
-wget https://github.com/google/protobuf/releases/download/v$2/protobuf-$2.tar.gz
-echo "Extracting protobuf"
-tar xf /tmp/protobuf-$2.tar.gz
-
-cd /tmp/protobuf-$2/
-mkdir -p /tmp/protobuf-$2/jni
-cp $HOME/bin/protobuff-android/Android.mk /tmp/protobuf-$2/jni/
-cp $HOME/bin/protobuff-android/Application.mk /tmp/protobuf-$2/jni/
+(
+    cd $BUILDDIR
+    wget https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz
+	tar xf $BUILDDIR/protobuf-2.5.0.tar.gz
+)
 
 
-sed -i '' "s/protobuf-SEDME/protobuf-$2/g" /tmp/protobuf-$2/jni/Android.mk
+cd $BUILDDIR/protobuf-2.5.0
 
-mkdir m_build
-./configure --prefix=/tmp/protobuf-$2/m_build \
---host=arm-linux-androideabi \
---with-sysroot=$SYSROOT \
---enable-cross-compile \
---with-protoc=protoc \
---disable-shared \
-CFLAGS="-march=armv7-a" \
-CXXFLAGS="-march=armv7-a -I$CXXSTL/include -I$CXXSTL/libs/armeabi-v7a/include"
  
-
-$NDK_HOME/ndk-build
-make check
+# 3. Run the configure to target a static library for the ARMv7 ABI
+# for using protoc, you need to install protoc to your OS first, or use another protoc by path
+./configure \
+		--prefix=$INSTALLPATH/ \
+		--host=arm-linux-androideabi \
+		--with-sysroot=$SYSROOT \
+		--enable-cross-compile \
+		--with-protoc=/Users/satoshi/Desktop/fc/ios/extrenal/prototbuf/platform/x86_64/bin/protoc \
+		CFLAGS="-march=armv7-a" \
+		CXXFLAGS="-march=armv7-a -I$CXXSTL/include -I$CXXSTL/libs/armeabi-v7a/include"
+ 
+# 4. Build
+make
+make install
  
 # 5. Inspect the library architecture specific information
-# arm-linux-androideabi-readelf -A /tmp/protobuf-$2/src/.libs/libprotobuf-lite.a
+# arm-linux-androideabi-readelf -A $INSTALLPATH/lib/libprotobuf-lite.a
 
-# cp /tmp/protobuf-$2/src/.libs/libprotobuf.a $PREFIX/lib/libprotobuf.a
-# cp /tmp/protobuf-$2/src/.libs/libprotobuf-lite.a $PREFIX/lib/libprotobuf-lite.a
-# cp /tmp/protobuf-$2/src/.libs/libprotoc.a $PREFIX/lib/libprotoc.a
-
-
-# mkdir -p $HOME/bin/protobuf/android/include/google/protobuf/
-# cp -r /tmp/protobuf-$2/src/google/protobuf $PREFIX/include/google/
-
+# cp build/lib/libprotobuf.a $PREFIX/libprotobuf.a
+# cp build/lib/libprotobuf-lite.a $PREFIX/libprotobuf-lite.a
